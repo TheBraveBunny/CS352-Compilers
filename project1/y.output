@@ -1,0 +1,703 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 program: opening middle closing ending
+
+    2 opening: OPENCARROT OPENING QUOTE CLOSECARROT
+
+    3 middle: lines
+    4       | /* empty */
+
+    5 lines: line
+    6      | line lines
+
+    7 line: statements NEWLINE
+
+    8 statements: statement statement_tail
+    9           | /* empty */
+
+   10 statement: write
+   11          | assign
+   12          | declare
+
+   13 statement_tail: SEMICOLON statements
+   14               | /* empty */
+
+   15 write: WRITE OPENPAR param_list CLOSEPAR
+
+   16 param_list: param param_tail
+   17           | /* empty */
+
+   18 param_tail: COMMA param param_tail
+   19           | /* empty */
+
+   20 param: expression
+
+   21 expression: OPENPAR expression CLOSEPAR right_side
+   22           | expr
+
+   23 expr: left_side right_side
+
+   24 left_side: ID
+   25          | QUOTE
+   26          | NUMBER
+
+   27 right_side: op expression
+   28           | /* empty */
+
+   29 op: PLUS
+   30   | MINUS
+   31   | MULTIPLY
+   32   | DIVIDE
+
+   33 assign: ID EQUAL expression
+
+   34 declare: VAR ID declare_right_side
+
+   35 declare_right_side: EQUAL expression
+   36                   | /* empty */
+
+   37 closing: OPENCARROT CLOSING CLOSECARROT
+
+   38 ending: NEWLINE ending
+   39       | /* empty */
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NUMBER (258) 26
+ID (259) 24 33 34
+QUOTE (260) 2 25
+OPENCARROT (261) 2 37
+CLOSECARROT (262) 2 37
+OPENING (263) 2
+CLOSING (264) 37
+VAR (265) 34
+EQUAL (266) 33 35
+PLUS (267) 29
+MINUS (268) 30
+MULTIPLY (269) 31
+DIVIDE (270) 32
+OPENPAR (271) 15 21
+CLOSEPAR (272) 15 21
+WRITE (273) 15
+NEWLINE (274) 7 38
+SEMICOLON (275) 13
+COMMA (276) 18
+
+
+Nonterminals, with rules where they appear
+
+$accept (22)
+    on left: 0
+program (23)
+    on left: 1, on right: 0
+opening (24)
+    on left: 2, on right: 1
+middle (25)
+    on left: 3 4, on right: 1
+lines (26)
+    on left: 5 6, on right: 3 6
+line (27)
+    on left: 7, on right: 5 6
+statements (28)
+    on left: 8 9, on right: 7 13
+statement (29)
+    on left: 10 11 12, on right: 8
+statement_tail (30)
+    on left: 13 14, on right: 8
+write (31)
+    on left: 15, on right: 10
+param_list (32)
+    on left: 16 17, on right: 15
+param_tail (33)
+    on left: 18 19, on right: 16 18
+param (34)
+    on left: 20, on right: 16 18
+expression (35)
+    on left: 21 22, on right: 20 21 27 33 35
+expr (36)
+    on left: 23, on right: 22
+left_side (37)
+    on left: 24 25 26, on right: 23
+right_side (38)
+    on left: 27 28, on right: 21 23
+op (39)
+    on left: 29 30 31 32, on right: 27
+assign (40)
+    on left: 33, on right: 11
+declare (41)
+    on left: 34, on right: 12
+declare_right_side (42)
+    on left: 35 36, on right: 34
+closing (43)
+    on left: 37, on right: 1
+ending (44)
+    on left: 38 39, on right: 1 38
+
+
+State 0
+
+    0 $accept: . program $end
+
+    OPENCARROT  shift, and go to state 1
+
+    program  go to state 2
+    opening  go to state 3
+
+
+State 1
+
+    2 opening: OPENCARROT . OPENING QUOTE CLOSECARROT
+
+    OPENING  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    1 program: opening . middle closing ending
+
+    ID     shift, and go to state 6
+    VAR    shift, and go to state 7
+    WRITE  shift, and go to state 8
+
+    NEWLINE   reduce using rule 9 (statements)
+    $default  reduce using rule 4 (middle)
+
+    middle      go to state 9
+    lines       go to state 10
+    line        go to state 11
+    statements  go to state 12
+    statement   go to state 13
+    write       go to state 14
+    assign      go to state 15
+    declare     go to state 16
+
+
+State 4
+
+    2 opening: OPENCARROT OPENING . QUOTE CLOSECARROT
+
+    QUOTE  shift, and go to state 17
+
+
+State 5
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 6
+
+   33 assign: ID . EQUAL expression
+
+    EQUAL  shift, and go to state 18
+
+
+State 7
+
+   34 declare: VAR . ID declare_right_side
+
+    ID  shift, and go to state 19
+
+
+State 8
+
+   15 write: WRITE . OPENPAR param_list CLOSEPAR
+
+    OPENPAR  shift, and go to state 20
+
+
+State 9
+
+    1 program: opening middle . closing ending
+
+    OPENCARROT  shift, and go to state 21
+
+    closing  go to state 22
+
+
+State 10
+
+    3 middle: lines .
+
+    $default  reduce using rule 3 (middle)
+
+
+State 11
+
+    5 lines: line .
+    6      | line . lines
+
+    ID     shift, and go to state 6
+    VAR    shift, and go to state 7
+    WRITE  shift, and go to state 8
+
+    NEWLINE   reduce using rule 9 (statements)
+    $default  reduce using rule 5 (lines)
+
+    lines       go to state 23
+    line        go to state 11
+    statements  go to state 12
+    statement   go to state 13
+    write       go to state 14
+    assign      go to state 15
+    declare     go to state 16
+
+
+State 12
+
+    7 line: statements . NEWLINE
+
+    NEWLINE  shift, and go to state 24
+
+
+State 13
+
+    8 statements: statement . statement_tail
+
+    SEMICOLON  shift, and go to state 25
+
+    $default  reduce using rule 14 (statement_tail)
+
+    statement_tail  go to state 26
+
+
+State 14
+
+   10 statement: write .
+
+    $default  reduce using rule 10 (statement)
+
+
+State 15
+
+   11 statement: assign .
+
+    $default  reduce using rule 11 (statement)
+
+
+State 16
+
+   12 statement: declare .
+
+    $default  reduce using rule 12 (statement)
+
+
+State 17
+
+    2 opening: OPENCARROT OPENING QUOTE . CLOSECARROT
+
+    CLOSECARROT  shift, and go to state 27
+
+
+State 18
+
+   33 assign: ID EQUAL . expression
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    expression  go to state 32
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 19
+
+   34 declare: VAR ID . declare_right_side
+
+    EQUAL  shift, and go to state 35
+
+    $default  reduce using rule 36 (declare_right_side)
+
+    declare_right_side  go to state 36
+
+
+State 20
+
+   15 write: WRITE OPENPAR . param_list CLOSEPAR
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    $default  reduce using rule 17 (param_list)
+
+    param_list  go to state 37
+    param       go to state 38
+    expression  go to state 39
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 21
+
+   37 closing: OPENCARROT . CLOSING CLOSECARROT
+
+    CLOSING  shift, and go to state 40
+
+
+State 22
+
+    1 program: opening middle closing . ending
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 39 (ending)
+
+    ending  go to state 42
+
+
+State 23
+
+    6 lines: line lines .
+
+    $default  reduce using rule 6 (lines)
+
+
+State 24
+
+    7 line: statements NEWLINE .
+
+    $default  reduce using rule 7 (line)
+
+
+State 25
+
+   13 statement_tail: SEMICOLON . statements
+
+    ID     shift, and go to state 6
+    VAR    shift, and go to state 7
+    WRITE  shift, and go to state 8
+
+    $default  reduce using rule 9 (statements)
+
+    statements  go to state 43
+    statement   go to state 13
+    write       go to state 14
+    assign      go to state 15
+    declare     go to state 16
+
+
+State 26
+
+    8 statements: statement statement_tail .
+
+    $default  reduce using rule 8 (statements)
+
+
+State 27
+
+    2 opening: OPENCARROT OPENING QUOTE CLOSECARROT .
+
+    $default  reduce using rule 2 (opening)
+
+
+State 28
+
+   26 left_side: NUMBER .
+
+    $default  reduce using rule 26 (left_side)
+
+
+State 29
+
+   24 left_side: ID .
+
+    $default  reduce using rule 24 (left_side)
+
+
+State 30
+
+   25 left_side: QUOTE .
+
+    $default  reduce using rule 25 (left_side)
+
+
+State 31
+
+   21 expression: OPENPAR . expression CLOSEPAR right_side
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    expression  go to state 44
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 32
+
+   33 assign: ID EQUAL expression .
+
+    $default  reduce using rule 33 (assign)
+
+
+State 33
+
+   22 expression: expr .
+
+    $default  reduce using rule 22 (expression)
+
+
+State 34
+
+   23 expr: left_side . right_side
+
+    PLUS      shift, and go to state 45
+    MINUS     shift, and go to state 46
+    MULTIPLY  shift, and go to state 47
+    DIVIDE    shift, and go to state 48
+
+    $default  reduce using rule 28 (right_side)
+
+    right_side  go to state 49
+    op          go to state 50
+
+
+State 35
+
+   35 declare_right_side: EQUAL . expression
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    expression  go to state 51
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 36
+
+   34 declare: VAR ID declare_right_side .
+
+    $default  reduce using rule 34 (declare)
+
+
+State 37
+
+   15 write: WRITE OPENPAR param_list . CLOSEPAR
+
+    CLOSEPAR  shift, and go to state 52
+
+
+State 38
+
+   16 param_list: param . param_tail
+
+    COMMA  shift, and go to state 53
+
+    $default  reduce using rule 19 (param_tail)
+
+    param_tail  go to state 54
+
+
+State 39
+
+   20 param: expression .
+
+    $default  reduce using rule 20 (param)
+
+
+State 40
+
+   37 closing: OPENCARROT CLOSING . CLOSECARROT
+
+    CLOSECARROT  shift, and go to state 55
+
+
+State 41
+
+   38 ending: NEWLINE . ending
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 39 (ending)
+
+    ending  go to state 56
+
+
+State 42
+
+    1 program: opening middle closing ending .
+
+    $default  reduce using rule 1 (program)
+
+
+State 43
+
+   13 statement_tail: SEMICOLON statements .
+
+    $default  reduce using rule 13 (statement_tail)
+
+
+State 44
+
+   21 expression: OPENPAR expression . CLOSEPAR right_side
+
+    CLOSEPAR  shift, and go to state 57
+
+
+State 45
+
+   29 op: PLUS .
+
+    $default  reduce using rule 29 (op)
+
+
+State 46
+
+   30 op: MINUS .
+
+    $default  reduce using rule 30 (op)
+
+
+State 47
+
+   31 op: MULTIPLY .
+
+    $default  reduce using rule 31 (op)
+
+
+State 48
+
+   32 op: DIVIDE .
+
+    $default  reduce using rule 32 (op)
+
+
+State 49
+
+   23 expr: left_side right_side .
+
+    $default  reduce using rule 23 (expr)
+
+
+State 50
+
+   27 right_side: op . expression
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    expression  go to state 58
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 51
+
+   35 declare_right_side: EQUAL expression .
+
+    $default  reduce using rule 35 (declare_right_side)
+
+
+State 52
+
+   15 write: WRITE OPENPAR param_list CLOSEPAR .
+
+    $default  reduce using rule 15 (write)
+
+
+State 53
+
+   18 param_tail: COMMA . param param_tail
+
+    NUMBER   shift, and go to state 28
+    ID       shift, and go to state 29
+    QUOTE    shift, and go to state 30
+    OPENPAR  shift, and go to state 31
+
+    param       go to state 59
+    expression  go to state 39
+    expr        go to state 33
+    left_side   go to state 34
+
+
+State 54
+
+   16 param_list: param param_tail .
+
+    $default  reduce using rule 16 (param_list)
+
+
+State 55
+
+   37 closing: OPENCARROT CLOSING CLOSECARROT .
+
+    $default  reduce using rule 37 (closing)
+
+
+State 56
+
+   38 ending: NEWLINE ending .
+
+    $default  reduce using rule 38 (ending)
+
+
+State 57
+
+   21 expression: OPENPAR expression CLOSEPAR . right_side
+
+    PLUS      shift, and go to state 45
+    MINUS     shift, and go to state 46
+    MULTIPLY  shift, and go to state 47
+    DIVIDE    shift, and go to state 48
+
+    $default  reduce using rule 28 (right_side)
+
+    right_side  go to state 60
+    op          go to state 50
+
+
+State 58
+
+   27 right_side: op expression .
+
+    $default  reduce using rule 27 (right_side)
+
+
+State 59
+
+   18 param_tail: COMMA param . param_tail
+
+    COMMA  shift, and go to state 53
+
+    $default  reduce using rule 19 (param_tail)
+
+    param_tail  go to state 61
+
+
+State 60
+
+   21 expression: OPENPAR expression CLOSEPAR right_side .
+
+    $default  reduce using rule 21 (expression)
+
+
+State 61
+
+   18 param_tail: COMMA param param_tail .
+
+    $default  reduce using rule 18 (param_tail)

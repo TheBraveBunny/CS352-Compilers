@@ -1,0 +1,1214 @@
+Grammar
+
+    0 $accept: program $end
+
+    1 $@1: /* empty */
+
+    2 program: opening $@1 middle closing ending
+
+    3 opening: OPENCARROT OPENING QUOTE CLOSECARROT
+
+    4 middle: statements
+
+    5 $@2: /* empty */
+
+    6 middle: NEWLINE $@2 middle_tail
+
+    7 middle_tail: lines
+    8            | /* empty */
+
+    9 lines: line
+   10      | line lines
+
+   11 line: statements NEWLINE
+
+   12 statements: statement statement_tail
+   13           | /* empty */
+
+   14 statement_tail: SEMICOLON statement_tail_tail
+   15               | /* empty */
+
+   16 statement_tail_tail: statement statement_tail
+   17                    | /* empty */
+
+   18 statement: DOCUMENT write
+   19          | VAR declare
+
+   20 $@3: /* empty */
+
+   21 statement: OPENCURLY $@3 middle CLOSECURLY
+   22          | assign
+
+   23 write: DOT WRITE OPENPAR param_list CLOSEPAR
+
+   24 param_list: param param_tail
+
+   25 param: expression
+
+   26 param_tail: COMMA param param_tail
+   27           | /* empty */
+
+   28 declare: ID declare_tail
+
+   29 declare_tail: EQUAL declare_tail_tail
+   30             | /* empty */
+
+   31 declare_tail_tail: expression
+   32                  | OPENCURLY NEWLINE fields NEWLINE CLOSECURLY
+
+   33 fields: field fields_tail
+
+   34 fields_tail: COMMA field fields_tail
+   35            | /* empty */
+
+   36 field: ending ID field_tail
+
+   37 field_tail: COLON expression
+   38           | /* empty */
+
+   39 closing: OPENCARROT CLOSING CLOSECARROT
+
+   40 assign: id_list EQUAL expression
+
+   41 id_list: ID DOT ID
+   42        | ID
+
+   43 expression: pm_expr
+
+   44 pm_expr: dm_expr pm_expr_tail
+
+   45 pm_expr_tail: PLUS dm_expr pm_expr_tail
+   46             | MINUS dm_expr pm_expr_tail
+   47             | /* empty */
+
+   48 dm_expr: sub_dm dm_expr_tail
+
+   49 dm_expr_tail: MULTIPLY sub_dm dm_expr_tail
+   50             | DIVIDE sub_dm dm_expr_tail
+   51             | /* empty */
+
+   52 sub_dm: base_value
+   53       | OPENPAR expression CLOSEPAR
+
+   54 base_value: NUMBER
+   55           | QUOTE
+   56           | ID DOT ID
+   57           | ID
+   58           | PRINTNEWLINE
+
+   59 $@4: /* empty */
+
+   60 ending: NEWLINE $@4 ending
+   61       | /* empty */
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256)
+NUMBER (258) 54
+ID (259) 28 36 41 42 56 57
+QUOTE (260) 3 55
+OPENCARROT (261) 3 39
+CLOSECARROT (262) 3 39
+OPENING (263) 3
+CLOSING (264) 39
+VAR (265) 19
+EQUAL (266) 29 40
+PLUS (267) 45
+MINUS (268) 46
+MULTIPLY (269) 49
+DIVIDE (270) 50
+OPENPAR (271) 23 53
+CLOSEPAR (272) 23 53
+WRITE (273) 23
+NEWLINE (274) 6 11 32 60
+SEMICOLON (275) 14
+COMMA (276) 26 34
+DOCUMENT (277) 18
+OPENCURLY (278) 21 32
+CLOSECURLY (279) 21 32
+COLON (280) 37
+DOT (281) 23 41 56
+PRINTNEWLINE (282) 58
+
+
+Nonterminals, with rules where they appear
+
+$accept (28)
+    on left: 0
+program (29)
+    on left: 2, on right: 0
+$@1 (30)
+    on left: 1, on right: 2
+opening (31)
+    on left: 3, on right: 2
+middle (32)
+    on left: 4 6, on right: 2 21
+$@2 (33)
+    on left: 5, on right: 6
+middle_tail (34)
+    on left: 7 8, on right: 6
+lines (35)
+    on left: 9 10, on right: 7 10
+line (36)
+    on left: 11, on right: 9 10
+statements (37)
+    on left: 12 13, on right: 4 11
+statement_tail (38)
+    on left: 14 15, on right: 12 16
+statement_tail_tail (39)
+    on left: 16 17, on right: 14
+statement (40)
+    on left: 18 19 21 22, on right: 12 16
+$@3 (41)
+    on left: 20, on right: 21
+write (42)
+    on left: 23, on right: 18
+param_list (43)
+    on left: 24, on right: 23
+param (44)
+    on left: 25, on right: 24 26
+param_tail (45)
+    on left: 26 27, on right: 24 26
+declare (46)
+    on left: 28, on right: 19
+declare_tail (47)
+    on left: 29 30, on right: 28
+declare_tail_tail (48)
+    on left: 31 32, on right: 29
+fields (49)
+    on left: 33, on right: 32
+fields_tail (50)
+    on left: 34 35, on right: 33 34
+field (51)
+    on left: 36, on right: 33 34
+field_tail (52)
+    on left: 37 38, on right: 36
+closing (53)
+    on left: 39, on right: 2
+assign (54)
+    on left: 40, on right: 22
+id_list (55)
+    on left: 41 42, on right: 40
+expression (56)
+    on left: 43, on right: 25 31 37 40 53
+pm_expr (57)
+    on left: 44, on right: 43
+pm_expr_tail (58)
+    on left: 45 46 47, on right: 44 45 46
+dm_expr (59)
+    on left: 48, on right: 44 45 46
+dm_expr_tail (60)
+    on left: 49 50 51, on right: 48 49 50
+sub_dm (61)
+    on left: 52 53, on right: 48 49 50
+base_value (62)
+    on left: 54 55 56 57 58, on right: 52
+ending (63)
+    on left: 60 61, on right: 2 36 60
+$@4 (64)
+    on left: 59, on right: 60
+
+
+State 0
+
+    0 $accept: . program $end
+
+    OPENCARROT  shift, and go to state 1
+
+    program  go to state 2
+    opening  go to state 3
+
+
+State 1
+
+    3 opening: OPENCARROT . OPENING QUOTE CLOSECARROT
+
+    OPENING  shift, and go to state 4
+
+
+State 2
+
+    0 $accept: program . $end
+
+    $end  shift, and go to state 5
+
+
+State 3
+
+    2 program: opening . $@1 middle closing ending
+
+    $default  reduce using rule 1 ($@1)
+
+    $@1  go to state 6
+
+
+State 4
+
+    3 opening: OPENCARROT OPENING . QUOTE CLOSECARROT
+
+    QUOTE  shift, and go to state 7
+
+
+State 5
+
+    0 $accept: program $end .
+
+    $default  accept
+
+
+State 6
+
+    2 program: opening $@1 . middle closing ending
+
+    ID         shift, and go to state 8
+    VAR        shift, and go to state 9
+    NEWLINE    shift, and go to state 10
+    DOCUMENT   shift, and go to state 11
+    OPENCURLY  shift, and go to state 12
+
+    $default  reduce using rule 13 (statements)
+
+    middle      go to state 13
+    statements  go to state 14
+    statement   go to state 15
+    assign      go to state 16
+    id_list     go to state 17
+
+
+State 7
+
+    3 opening: OPENCARROT OPENING QUOTE . CLOSECARROT
+
+    CLOSECARROT  shift, and go to state 18
+
+
+State 8
+
+   41 id_list: ID . DOT ID
+   42        | ID .
+
+    DOT  shift, and go to state 19
+
+    $default  reduce using rule 42 (id_list)
+
+
+State 9
+
+   19 statement: VAR . declare
+
+    ID  shift, and go to state 20
+
+    declare  go to state 21
+
+
+State 10
+
+    6 middle: NEWLINE . $@2 middle_tail
+
+    $default  reduce using rule 5 ($@2)
+
+    $@2  go to state 22
+
+
+State 11
+
+   18 statement: DOCUMENT . write
+
+    DOT  shift, and go to state 23
+
+    write  go to state 24
+
+
+State 12
+
+   21 statement: OPENCURLY . $@3 middle CLOSECURLY
+
+    $default  reduce using rule 20 ($@3)
+
+    $@3  go to state 25
+
+
+State 13
+
+    2 program: opening $@1 middle . closing ending
+
+    OPENCARROT  shift, and go to state 26
+
+    closing  go to state 27
+
+
+State 14
+
+    4 middle: statements .
+
+    $default  reduce using rule 4 (middle)
+
+
+State 15
+
+   12 statements: statement . statement_tail
+
+    SEMICOLON  shift, and go to state 28
+
+    $default  reduce using rule 15 (statement_tail)
+
+    statement_tail  go to state 29
+
+
+State 16
+
+   22 statement: assign .
+
+    $default  reduce using rule 22 (statement)
+
+
+State 17
+
+   40 assign: id_list . EQUAL expression
+
+    EQUAL  shift, and go to state 30
+
+
+State 18
+
+    3 opening: OPENCARROT OPENING QUOTE CLOSECARROT .
+
+    $default  reduce using rule 3 (opening)
+
+
+State 19
+
+   41 id_list: ID DOT . ID
+
+    ID  shift, and go to state 31
+
+
+State 20
+
+   28 declare: ID . declare_tail
+
+    EQUAL  shift, and go to state 32
+
+    $default  reduce using rule 30 (declare_tail)
+
+    declare_tail  go to state 33
+
+
+State 21
+
+   19 statement: VAR declare .
+
+    $default  reduce using rule 19 (statement)
+
+
+State 22
+
+    6 middle: NEWLINE $@2 . middle_tail
+
+    ID         shift, and go to state 8
+    VAR        shift, and go to state 9
+    DOCUMENT   shift, and go to state 11
+    OPENCURLY  shift, and go to state 12
+
+    NEWLINE   reduce using rule 13 (statements)
+    $default  reduce using rule 8 (middle_tail)
+
+    middle_tail  go to state 34
+    lines        go to state 35
+    line         go to state 36
+    statements   go to state 37
+    statement    go to state 15
+    assign       go to state 16
+    id_list      go to state 17
+
+
+State 23
+
+   23 write: DOT . WRITE OPENPAR param_list CLOSEPAR
+
+    WRITE  shift, and go to state 38
+
+
+State 24
+
+   18 statement: DOCUMENT write .
+
+    $default  reduce using rule 18 (statement)
+
+
+State 25
+
+   21 statement: OPENCURLY $@3 . middle CLOSECURLY
+
+    ID         shift, and go to state 8
+    VAR        shift, and go to state 9
+    NEWLINE    shift, and go to state 10
+    DOCUMENT   shift, and go to state 11
+    OPENCURLY  shift, and go to state 12
+
+    $default  reduce using rule 13 (statements)
+
+    middle      go to state 39
+    statements  go to state 14
+    statement   go to state 15
+    assign      go to state 16
+    id_list     go to state 17
+
+
+State 26
+
+   39 closing: OPENCARROT . CLOSING CLOSECARROT
+
+    CLOSING  shift, and go to state 40
+
+
+State 27
+
+    2 program: opening $@1 middle closing . ending
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 61 (ending)
+
+    ending  go to state 42
+
+
+State 28
+
+   14 statement_tail: SEMICOLON . statement_tail_tail
+
+    ID         shift, and go to state 8
+    VAR        shift, and go to state 9
+    DOCUMENT   shift, and go to state 11
+    OPENCURLY  shift, and go to state 12
+
+    $default  reduce using rule 17 (statement_tail_tail)
+
+    statement_tail_tail  go to state 43
+    statement            go to state 44
+    assign               go to state 16
+    id_list              go to state 17
+
+
+State 29
+
+   12 statements: statement statement_tail .
+
+    $default  reduce using rule 12 (statements)
+
+
+State 30
+
+   40 assign: id_list EQUAL . expression
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    expression  go to state 50
+    pm_expr     go to state 51
+    dm_expr     go to state 52
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 31
+
+   41 id_list: ID DOT ID .
+
+    $default  reduce using rule 41 (id_list)
+
+
+State 32
+
+   29 declare_tail: EQUAL . declare_tail_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    OPENCURLY     shift, and go to state 55
+    PRINTNEWLINE  shift, and go to state 49
+
+    declare_tail_tail  go to state 56
+    expression         go to state 57
+    pm_expr            go to state 51
+    dm_expr            go to state 52
+    sub_dm             go to state 53
+    base_value         go to state 54
+
+
+State 33
+
+   28 declare: ID declare_tail .
+
+    $default  reduce using rule 28 (declare)
+
+
+State 34
+
+    6 middle: NEWLINE $@2 middle_tail .
+
+    $default  reduce using rule 6 (middle)
+
+
+State 35
+
+    7 middle_tail: lines .
+
+    $default  reduce using rule 7 (middle_tail)
+
+
+State 36
+
+    9 lines: line .
+   10      | line . lines
+
+    ID         shift, and go to state 8
+    VAR        shift, and go to state 9
+    DOCUMENT   shift, and go to state 11
+    OPENCURLY  shift, and go to state 12
+
+    NEWLINE   reduce using rule 13 (statements)
+    $default  reduce using rule 9 (lines)
+
+    lines       go to state 58
+    line        go to state 36
+    statements  go to state 37
+    statement   go to state 15
+    assign      go to state 16
+    id_list     go to state 17
+
+
+State 37
+
+   11 line: statements . NEWLINE
+
+    NEWLINE  shift, and go to state 59
+
+
+State 38
+
+   23 write: DOT WRITE . OPENPAR param_list CLOSEPAR
+
+    OPENPAR  shift, and go to state 60
+
+
+State 39
+
+   21 statement: OPENCURLY $@3 middle . CLOSECURLY
+
+    CLOSECURLY  shift, and go to state 61
+
+
+State 40
+
+   39 closing: OPENCARROT CLOSING . CLOSECARROT
+
+    CLOSECARROT  shift, and go to state 62
+
+
+State 41
+
+   60 ending: NEWLINE . $@4 ending
+
+    $default  reduce using rule 59 ($@4)
+
+    $@4  go to state 63
+
+
+State 42
+
+    2 program: opening $@1 middle closing ending .
+
+    $default  reduce using rule 2 (program)
+
+
+State 43
+
+   14 statement_tail: SEMICOLON statement_tail_tail .
+
+    $default  reduce using rule 14 (statement_tail)
+
+
+State 44
+
+   16 statement_tail_tail: statement . statement_tail
+
+    SEMICOLON  shift, and go to state 28
+
+    $default  reduce using rule 15 (statement_tail)
+
+    statement_tail  go to state 64
+
+
+State 45
+
+   54 base_value: NUMBER .
+
+    $default  reduce using rule 54 (base_value)
+
+
+State 46
+
+   56 base_value: ID . DOT ID
+   57           | ID .
+
+    DOT  shift, and go to state 65
+
+    $default  reduce using rule 57 (base_value)
+
+
+State 47
+
+   55 base_value: QUOTE .
+
+    $default  reduce using rule 55 (base_value)
+
+
+State 48
+
+   53 sub_dm: OPENPAR . expression CLOSEPAR
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    expression  go to state 66
+    pm_expr     go to state 51
+    dm_expr     go to state 52
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 49
+
+   58 base_value: PRINTNEWLINE .
+
+    $default  reduce using rule 58 (base_value)
+
+
+State 50
+
+   40 assign: id_list EQUAL expression .
+
+    $default  reduce using rule 40 (assign)
+
+
+State 51
+
+   43 expression: pm_expr .
+
+    $default  reduce using rule 43 (expression)
+
+
+State 52
+
+   44 pm_expr: dm_expr . pm_expr_tail
+
+    PLUS   shift, and go to state 67
+    MINUS  shift, and go to state 68
+
+    $default  reduce using rule 47 (pm_expr_tail)
+
+    pm_expr_tail  go to state 69
+
+
+State 53
+
+   48 dm_expr: sub_dm . dm_expr_tail
+
+    MULTIPLY  shift, and go to state 70
+    DIVIDE    shift, and go to state 71
+
+    $default  reduce using rule 51 (dm_expr_tail)
+
+    dm_expr_tail  go to state 72
+
+
+State 54
+
+   52 sub_dm: base_value .
+
+    $default  reduce using rule 52 (sub_dm)
+
+
+State 55
+
+   32 declare_tail_tail: OPENCURLY . NEWLINE fields NEWLINE CLOSECURLY
+
+    NEWLINE  shift, and go to state 73
+
+
+State 56
+
+   29 declare_tail: EQUAL declare_tail_tail .
+
+    $default  reduce using rule 29 (declare_tail)
+
+
+State 57
+
+   31 declare_tail_tail: expression .
+
+    $default  reduce using rule 31 (declare_tail_tail)
+
+
+State 58
+
+   10 lines: line lines .
+
+    $default  reduce using rule 10 (lines)
+
+
+State 59
+
+   11 line: statements NEWLINE .
+
+    $default  reduce using rule 11 (line)
+
+
+State 60
+
+   23 write: DOT WRITE OPENPAR . param_list CLOSEPAR
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    param_list  go to state 74
+    param       go to state 75
+    expression  go to state 76
+    pm_expr     go to state 51
+    dm_expr     go to state 52
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 61
+
+   21 statement: OPENCURLY $@3 middle CLOSECURLY .
+
+    $default  reduce using rule 21 (statement)
+
+
+State 62
+
+   39 closing: OPENCARROT CLOSING CLOSECARROT .
+
+    $default  reduce using rule 39 (closing)
+
+
+State 63
+
+   60 ending: NEWLINE $@4 . ending
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 61 (ending)
+
+    ending  go to state 77
+
+
+State 64
+
+   16 statement_tail_tail: statement statement_tail .
+
+    $default  reduce using rule 16 (statement_tail_tail)
+
+
+State 65
+
+   56 base_value: ID DOT . ID
+
+    ID  shift, and go to state 78
+
+
+State 66
+
+   53 sub_dm: OPENPAR expression . CLOSEPAR
+
+    CLOSEPAR  shift, and go to state 79
+
+
+State 67
+
+   45 pm_expr_tail: PLUS . dm_expr pm_expr_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    dm_expr     go to state 80
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 68
+
+   46 pm_expr_tail: MINUS . dm_expr pm_expr_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    dm_expr     go to state 81
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 69
+
+   44 pm_expr: dm_expr pm_expr_tail .
+
+    $default  reduce using rule 44 (pm_expr)
+
+
+State 70
+
+   49 dm_expr_tail: MULTIPLY . sub_dm dm_expr_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    sub_dm      go to state 82
+    base_value  go to state 54
+
+
+State 71
+
+   50 dm_expr_tail: DIVIDE . sub_dm dm_expr_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    sub_dm      go to state 83
+    base_value  go to state 54
+
+
+State 72
+
+   48 dm_expr: sub_dm dm_expr_tail .
+
+    $default  reduce using rule 48 (dm_expr)
+
+
+State 73
+
+   32 declare_tail_tail: OPENCURLY NEWLINE . fields NEWLINE CLOSECURLY
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 61 (ending)
+
+    fields  go to state 84
+    field   go to state 85
+    ending  go to state 86
+
+
+State 74
+
+   23 write: DOT WRITE OPENPAR param_list . CLOSEPAR
+
+    CLOSEPAR  shift, and go to state 87
+
+
+State 75
+
+   24 param_list: param . param_tail
+
+    COMMA  shift, and go to state 88
+
+    $default  reduce using rule 27 (param_tail)
+
+    param_tail  go to state 89
+
+
+State 76
+
+   25 param: expression .
+
+    $default  reduce using rule 25 (param)
+
+
+State 77
+
+   60 ending: NEWLINE $@4 ending .
+
+    $default  reduce using rule 60 (ending)
+
+
+State 78
+
+   56 base_value: ID DOT ID .
+
+    $default  reduce using rule 56 (base_value)
+
+
+State 79
+
+   53 sub_dm: OPENPAR expression CLOSEPAR .
+
+    $default  reduce using rule 53 (sub_dm)
+
+
+State 80
+
+   45 pm_expr_tail: PLUS dm_expr . pm_expr_tail
+
+    PLUS   shift, and go to state 67
+    MINUS  shift, and go to state 68
+
+    $default  reduce using rule 47 (pm_expr_tail)
+
+    pm_expr_tail  go to state 90
+
+
+State 81
+
+   46 pm_expr_tail: MINUS dm_expr . pm_expr_tail
+
+    PLUS   shift, and go to state 67
+    MINUS  shift, and go to state 68
+
+    $default  reduce using rule 47 (pm_expr_tail)
+
+    pm_expr_tail  go to state 91
+
+
+State 82
+
+   49 dm_expr_tail: MULTIPLY sub_dm . dm_expr_tail
+
+    MULTIPLY  shift, and go to state 70
+    DIVIDE    shift, and go to state 71
+
+    $default  reduce using rule 51 (dm_expr_tail)
+
+    dm_expr_tail  go to state 92
+
+
+State 83
+
+   50 dm_expr_tail: DIVIDE sub_dm . dm_expr_tail
+
+    MULTIPLY  shift, and go to state 70
+    DIVIDE    shift, and go to state 71
+
+    $default  reduce using rule 51 (dm_expr_tail)
+
+    dm_expr_tail  go to state 93
+
+
+State 84
+
+   32 declare_tail_tail: OPENCURLY NEWLINE fields . NEWLINE CLOSECURLY
+
+    NEWLINE  shift, and go to state 94
+
+
+State 85
+
+   33 fields: field . fields_tail
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 35 (fields_tail)
+
+    fields_tail  go to state 96
+
+
+State 86
+
+   36 field: ending . ID field_tail
+
+    ID  shift, and go to state 97
+
+
+State 87
+
+   23 write: DOT WRITE OPENPAR param_list CLOSEPAR .
+
+    $default  reduce using rule 23 (write)
+
+
+State 88
+
+   26 param_tail: COMMA . param param_tail
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    param       go to state 98
+    expression  go to state 76
+    pm_expr     go to state 51
+    dm_expr     go to state 52
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 89
+
+   24 param_list: param param_tail .
+
+    $default  reduce using rule 24 (param_list)
+
+
+State 90
+
+   45 pm_expr_tail: PLUS dm_expr pm_expr_tail .
+
+    $default  reduce using rule 45 (pm_expr_tail)
+
+
+State 91
+
+   46 pm_expr_tail: MINUS dm_expr pm_expr_tail .
+
+    $default  reduce using rule 46 (pm_expr_tail)
+
+
+State 92
+
+   49 dm_expr_tail: MULTIPLY sub_dm dm_expr_tail .
+
+    $default  reduce using rule 49 (dm_expr_tail)
+
+
+State 93
+
+   50 dm_expr_tail: DIVIDE sub_dm dm_expr_tail .
+
+    $default  reduce using rule 50 (dm_expr_tail)
+
+
+State 94
+
+   32 declare_tail_tail: OPENCURLY NEWLINE fields NEWLINE . CLOSECURLY
+
+    CLOSECURLY  shift, and go to state 99
+
+
+State 95
+
+   34 fields_tail: COMMA . field fields_tail
+
+    NEWLINE  shift, and go to state 41
+
+    $default  reduce using rule 61 (ending)
+
+    field   go to state 100
+    ending  go to state 86
+
+
+State 96
+
+   33 fields: field fields_tail .
+
+    $default  reduce using rule 33 (fields)
+
+
+State 97
+
+   36 field: ending ID . field_tail
+
+    COLON  shift, and go to state 101
+
+    $default  reduce using rule 38 (field_tail)
+
+    field_tail  go to state 102
+
+
+State 98
+
+   26 param_tail: COMMA param . param_tail
+
+    COMMA  shift, and go to state 88
+
+    $default  reduce using rule 27 (param_tail)
+
+    param_tail  go to state 103
+
+
+State 99
+
+   32 declare_tail_tail: OPENCURLY NEWLINE fields NEWLINE CLOSECURLY .
+
+    $default  reduce using rule 32 (declare_tail_tail)
+
+
+State 100
+
+   34 fields_tail: COMMA field . fields_tail
+
+    COMMA  shift, and go to state 95
+
+    $default  reduce using rule 35 (fields_tail)
+
+    fields_tail  go to state 104
+
+
+State 101
+
+   37 field_tail: COLON . expression
+
+    NUMBER        shift, and go to state 45
+    ID            shift, and go to state 46
+    QUOTE         shift, and go to state 47
+    OPENPAR       shift, and go to state 48
+    PRINTNEWLINE  shift, and go to state 49
+
+    expression  go to state 105
+    pm_expr     go to state 51
+    dm_expr     go to state 52
+    sub_dm      go to state 53
+    base_value  go to state 54
+
+
+State 102
+
+   36 field: ending ID field_tail .
+
+    $default  reduce using rule 36 (field)
+
+
+State 103
+
+   26 param_tail: COMMA param param_tail .
+
+    $default  reduce using rule 26 (param_tail)
+
+
+State 104
+
+   34 fields_tail: COMMA field fields_tail .
+
+    $default  reduce using rule 34 (fields_tail)
+
+
+State 105
+
+   37 field_tail: COLON expression .
+
+    $default  reduce using rule 37 (field_tail)
